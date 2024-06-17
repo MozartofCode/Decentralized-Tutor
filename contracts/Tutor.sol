@@ -35,6 +35,23 @@ contract Tutor {
             }
         }
         return false;
+    }    
+
+    function isTutorName(string memory _name) {
+        for (uint i = 0; i < tutorAddresses.length; i++) {
+            if (tutors[tutorAddresses[i]].name == _name) {
+                return true
+            }
+        }
+        return false
+    }
+
+    function getTutor(string memory _name) public view returns (StudentPerson) {
+        for (uint i = 0; i < tutorAddresses.length; i++) {
+            if (tutors[tutorAddresses[i]].name == _name) {
+                return tutors[tutorsAddresses[i]]
+            }
+        }
     }
 
 

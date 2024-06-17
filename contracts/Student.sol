@@ -28,20 +28,32 @@ contract Student {
         students[_adr] = StudentPerson(_name, _balance, _classesTaught, _daysAvailable, _adr);
     }
 
-    function getBalance(address _adr) public view returns(uint256) {
-        return students[_adr].balance;
-    }
-
     function sendMoney(address receiver, uint256 amount) public returns (bool sufficient) {
         require(students[msg.sender].balance < amount, "Insufficient balance");
         students[msg.sender].balance -= amount;
-        
+
         emit Transfer(msg.sender, receiver, amount);
         TutorContract.receiveMoney(amount, receiver);
         return true;
     }
 
 
+    function isStudentName(string memory _name) {
+        for (uint i = 0; i < studentAddresses.length; i++) {
+            if (students[studentAddresses[i]].name == _name) {
+                return true
+            }
+        }
+        return false
+    }
+
+    function getStudent(string memory _name) public view returns (StudentPerson) {
+        for (uint i = 0; i < studentAddresses.length; i++) {
+            if (students[studentAddresses[i]].name == _name) {
+                return students[studentsAddresses[i]]
+            }
+        }
+    }
 
     function returnAllStudents() public view returns (StudentPerson[] memory) {
         StudentPerson[] memory studentsList;
@@ -61,5 +73,11 @@ contract Student {
         }
         return false;
     }
+
+
+    function matchWithTutor() public{}
+
+
+
 
 }
