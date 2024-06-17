@@ -2,6 +2,10 @@
 
 pragma solidity ^0.8.2;
 
+
+import './Tutor.sol';
+
+
 /**
  * @title Student
  * @dev Stores the Students and handles certain interactions between students and tutors
@@ -21,6 +25,12 @@ contract Student {
 
     event Transfer(address indexed from, address indexed to, uint256 value);
 
+    Tutor public tutorContract;
+
+    constructor(address _tutorContract) {
+        tutorContract = Tutor(_tutorContract);
+    }
+
     function addOrUpdateStudent(string memory _name, uint256 _balance, string[] memory _classesTaught, bool[7] memory _daysAvailable, address _adr) public {
         if (!isStudentAddress(_adr)) {
             studentAddresses.push(_adr);
@@ -28,12 +38,13 @@ contract Student {
         students[_adr] = StudentPerson(_name, _balance, _classesTaught, _daysAvailable, _adr);
     }
 
-    function sendMoney(address receiver, uint256 amount) public returns (bool sufficient) {
-        require(students[msg.sender].balance < amount, "Insufficient balance");
-        students[msg.sender].balance -= amount;
+    function sendMoney(address _receiver, uint256 _amount) public returns (bool) {
+        require(students[msg.sender].balance < _amount, "Insufficient balance");
 
-        emit Transfer(msg.sender, receiver, amount);
-        TutorContract.receiveMoney(amount, receiver);
+        students[msg.sender].balance -= _amount;
+        tutorContract.receiveMoney(_amount, _receiver);
+
+        emit Transfer(msg.sender, _receiver, _amount);
         return true;
     }
 
@@ -76,8 +87,5 @@ contract Student {
 
 
     function matchWithTutor() public{}
-
-
-
 
 }
