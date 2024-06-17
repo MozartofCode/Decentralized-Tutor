@@ -27,7 +27,7 @@ contract Student {
         }
         students[_adr] = StudentPerson(_name, _balance, _classesTaught, _daysAvailable, _adr);
     }
-    
+
     function getBalance(address _adr) public view returns(uint256) {
         return students[_adr].balance;
     }
@@ -35,10 +35,12 @@ contract Student {
     function sendMoney(address receiver, uint256 amount) public returns (bool sufficient) {
         require(students[msg.sender].balance < amount, "Insufficient balance");
         students[msg.sender].balance -= amount;
-        //students[receiver].balance += amount;
+        
         emit Transfer(msg.sender, receiver, amount);
+        TutorContract.receiveMoney(amount, receiver);
         return true;
     }
+
 
 
     function returnAllStudents() public view returns (StudentPerson[] memory) {

@@ -19,6 +19,13 @@ contract Tutor {
     mapping(address => TutorPerson) public tutors;
     address[] public tutorAddresses;
 
+    event Received(address from, uint256 amount);
+
+    function receiveMoney(uint256 _amount, address _adr) public {
+        tutors[_adr].balance += _amount;
+        emit Received(msg.sender, _amount);
+    }
+
 
     // Function to check if an address is in the tutorAddresses array
     function isTutorAddress(address _address) public view returns (bool) {
