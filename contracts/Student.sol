@@ -39,7 +39,7 @@ contract Student {
     }
 
     function sendMoney(address _receiver, uint256 _amount) public returns (bool) {
-        require(students[msg.sender].balance < _amount, "Insufficient balance");
+        require(students[msg.sender].balance >= _amount, "Insufficient balance");
 
         students[msg.sender].balance -= _amount;
         tutorContract.receiveMoney(_amount, _receiver);
@@ -49,27 +49,31 @@ contract Student {
     }
 
 
-    function isStudentName(string memory _name) {
+    function isStudentName(string memory _name) public view returns (bool) {
         for (uint i = 0; i < studentAddresses.length; i++) {
-            if (students[studentAddresses[i]].name == _name) {
-                return true
+            if (keccak256(bytes(students[studentAddresses[i]].name)) == keccak256(bytes(_name))) {
+                return true;
             }
         }
-        return false
+        return false;
     }
 
-    function getStudent(string memory _name) public view returns (StudentPerson) {
+    function getStudent(string memory _name) public view returns (StudentPerson memory) {
         for (uint i = 0; i < studentAddresses.length; i++) {
-            if (students[studentAddresses[i]].name == _name) {
-                return students[studentsAddresses[i]]
+             if (keccak256(bytes(students[studentAddresses[i]].name)) == keccak256(bytes(_name))) {
+                return students[studentAddresses[i]];
             }
         }
+
+        revert("Student not found");
     }
 
     function returnAllStudents() public view returns (StudentPerson[] memory) {
-        StudentPerson[] memory studentsList;
+        
+        
+        StudentPerson[] memory studentsList = new StudentPerson[](studentAddresses.length);
         for (uint i = 0; i < studentAddresses.length; i++) {
-            studentsList.push(students[studentAddresses[i]]);
+            studentsList[i] = students[studentAddresses[i]];
         }
         return studentsList;
     }

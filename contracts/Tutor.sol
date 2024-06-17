@@ -37,21 +37,23 @@ contract Tutor {
         return false;
     }    
 
-    function isTutorName(string memory _name) {
-        for (uint i = 0; i < tutorAddresses.length; i++) {
-            if (tutors[tutorAddresses[i]].name == _name) {
-                return true
-            }
+    function isTutorName(string memory _name) public view returns (bool) {
+    for (uint i = 0; i < tutorAddresses.length; i++) {
+        if (keccak256(bytes(tutors[tutorAddresses[i]].name)) == keccak256(bytes(_name))) {
+            return true;
         }
-        return false
     }
+    return false;
+}
 
-    function getTutor(string memory _name) public view returns (StudentPerson) {
+
+    function getTutor(string memory _name) public view returns (TutorPerson memory) {
         for (uint i = 0; i < tutorAddresses.length; i++) {
-            if (tutors[tutorAddresses[i]].name == _name) {
-                return tutors[tutorsAddresses[i]]
+            if (keccak256(bytes(tutors[tutorAddresses[i]].name)) == keccak256(bytes(_name))) {
+                return tutors[tutorAddresses[i]];
             }
         }
+        revert("Tutor not found");
     }
 
 
@@ -70,12 +72,20 @@ contract Tutor {
 
     // Day is the index of the day (0-indexed where 0 being monday and 6 being sunday)
     function getAvailableTutors(uint256 _day) public view returns (TutorPerson[] memory) {
-          
-        TutorPerson[] memory tutorList;
+        
+        uint numTutor = 0;
         
         for (uint i = 0; i < tutorAddresses.length; i++) {
             if (tutors[tutorAddresses[i]].daysAvailable[_day]) {
-                tutorList.push(tutors[tutorAddresses[i]]);
+                numTutor += 1;
+            }
+        }
+
+        TutorPerson[] memory tutorList = new TutorPerson[](numTutor);
+        
+        for (uint i = 0; i < tutorAddresses.length; i++) {
+            if (tutors[tutorAddresses[i]].daysAvailable[_day]) {
+                tutorList[i] = tutors[tutorAddresses[i]];
             }
         }
         return tutorList;
