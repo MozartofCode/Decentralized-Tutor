@@ -11,6 +11,8 @@ def commands():
     print("Show all the students in the system:- showStudents")
     print("Get a student:- getStudent name")
     print("Get a tutor:- getTutor name")
+    print("Get a tutor's current students:- getCurrentStudents name")
+    print("Get a student's current tutors:- getCurrentTutors name")
     print("Match student with tutor:- match studentname&tutorname")
     print("Quit the system:- quit")
     print()
