@@ -92,18 +92,21 @@ contract Student {
 
 
     function matchWithTutor(string memory _studentName) public returns (bool) {
-        StudentPerson storage std = students[getStudentAddressByName(_studentName)];
-        Tutor.TutorPerson[] memory possibleTutorsClass = tutorContract.getAvailableTutorsClass(std.classesRequested);
+        StudentPerson storage std = students[msg.sender]; // assuming msg.sender is the student's address
+        
+        tutorContract.TutorPerson[] possibleTutors = tutorContract.getAvailableTutorsClass(std.classesRequested);
 
         for (uint i = 0; i < std.daysAvailable.length; i++) {
             if (std.daysAvailable[i]) {
-                Tutor.TutorPerson[] memory possibleTutorsDay = tutorContract.getAvailableTutors(i);
-                for (uint j = 0; j < possibleTutorsDay.length; j++) {
-                    for (uint k = 0; k < possibleTutorsClass.length; k++) {
-                        if (keccak256(abi.encodePacked(possibleTutorsDay[j].wallet)) == keccak256(abi.encodePacked(possibleTutorsClass[k].wallet))) {
+                TutorPerson[] memory possibleTutorDay = tutorContract.getAvailableTutors(i);
+                for (uint j = 0; j < possibleTutorDay.length; j++) {
+                    for (uint k = 0; k < possibleTutors.length; k++) {
+                        if (compareTutors(possibleTutorDay[j], possibleTutors[k])) {
                             // There is a match!
-                            tutorContract.updateTutorAvailability(possibleTutorsDay[j].wallet, i, false);
+                            possibleTutorDay[j].daysAvailable[i] = false;
                             std.daysAvailable[i] = false;
+                            std.currentTutors.push(possibleTutorDay[j].name); // Add tutor's name or address
+                            possibleTutorDay[j].currentStudents.push(std.name); // Add student's name or address
                             return true;
                         }
                     }
@@ -111,8 +114,9 @@ contract Student {
             }
         }
 
-        return false;
+        return false; // No match found
     }
+
 
      function getStudentAddressByName(string memory _name) internal view returns (address) {
         for (uint i = 0; i < studentAddresses.length; i++) {

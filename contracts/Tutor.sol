@@ -96,9 +96,13 @@ contract Tutor {
         return tutorList;
     }
 
+    
+    function compareTutors(TutorPerson memory tutor1, TutorPerson memory tutor2) internal pure returns (bool) {
+        // Compare relevant attributes for a match
+        return (keccak256(abi.encodePacked(tutor1.name)) == keccak256(abi.encodePacked(tutor2.name)));
+    }
 
-
-      function getAvailableTutorsClass(string[] memory _classes) public view returns (TutorPerson[] memory) {
+    function getAvailableTutorsClass(string[] memory _classes) public view returns (TutorPerson[] memory) {
         TutorPerson[] memory tempTutorList = new TutorPerson[](tutorAddresses.length);
         uint count = 0;
 
@@ -137,6 +141,5 @@ contract Tutor {
      function updateTutorAvailability(address tutorAddress, uint day, bool availability) public {
         tutors[tutorAddress].daysAvailable[day] = availability;
     }
-
 
 }
