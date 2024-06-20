@@ -30,12 +30,7 @@ contract Student {
         tutorContract = Tutor(_tutorContract);
     }
 
-    function addOrUpdateStudent(string memory _name, uint256 _balance, string[] memory _classesTaught, bool[7] memory _daysAvailable, string[] memory _currentTutors, address _adr) public {
-        if (!isStudentAddress(_adr)) {
-            studentAddresses.push(_adr);
-        }
-        students[_adr] = StudentPerson(_name, _balance, _classesTaught, _daysAvailable, _currentTutors, _adr);
-    }
+   
 
     function sendMoney(address _receiver, uint256 _amount) public returns (bool) {
         require(students[msg.sender].balance >= _amount, "Insufficient balance");
