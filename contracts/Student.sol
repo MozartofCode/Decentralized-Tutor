@@ -2,9 +2,7 @@
 
 pragma solidity ^0.8.2;
 
-
 import './Tutor.sol';
-
 
 /**
  * @title Student
