@@ -12,11 +12,12 @@ def commands():
     print("Show all the students in the system:- showStudents")
     print("Get a student:- getStudent name")
     print("Get a tutor:- getTutor name")
-
-    print("Show all available tutors for a given day:- getTutors Day")
-    print("Match student with tutor:- match studentname&tutorname")
     print("Delete Student:- deleteStudent name")
     print("Delete Tutor:- deleteTutor name")
+    print("Show all available tutors for a given day:- getDayTutors Day")
+    print("Show all availavle tutors for a given class:- getClassTutors class")
+
+    print("Match student with tutor:- match studentname tutorname") -> false or true return
     print("Quit the system:- quit")
     print()
 

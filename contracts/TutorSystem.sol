@@ -15,6 +15,7 @@ contract TutorSystem {
         string[] classesTaught;
         bool[7] daysAvailable; // True if available that day False if not
         string[] currentStudents;
+        uint256 priceForClass;
         address wallet;
     }
 
@@ -35,8 +36,8 @@ contract TutorSystem {
     string[] public tutorNames;
 
     // Constructors for Tutor and Student
-    function createTutor(string memory _name, uint256 _balance, string[] memory _classesTaught, bool[7] memory _daysAvailable, string[] memory _currentStudents, address _adr) public {
-        tutors[_name] = Tutor(_name, _balance, _classesTaught, _daysAvailable, _currentStudents, _adr);
+    function createTutor(string memory _name, uint256 _balance, string[] memory _classesTaught, bool[7] memory _daysAvailable, string[] memory _currentStudents, uint256 _price, address _adr) public {
+        tutors[_name] = Tutor(_name, _balance, _classesTaught, _daysAvailable, _currentStudents, _price, _adr);
         tutorNames.push(_name);
     }
 
@@ -57,6 +58,10 @@ contract TutorSystem {
 
     function setTutorDaysAvailable(string memory _name, bool[7] memory _daysAvailable) public {
         tutors[_name].daysAvailable = _daysAvailable;
+    }
+
+    function setTutorPrice(string memory _name, uint256 _price) public {
+        tutors[_name].priceForClass = _price;
     }
 
     function setTutorCurrentStudents(string memory _name, string[] memory _currentStudents) public {
@@ -91,6 +96,10 @@ contract TutorSystem {
 
     function getTutorBalance(string memory _name) public view returns (uint256) {
         return tutors[_name].balance;
+    }
+
+    function getTutorPrice(string memory _name) public view returns (uint256) {
+        return tutors[_name].priceForClass;
     }
 
     function getTutorClassesTaught(string memory _name) public view returns (string[] memory) {
@@ -130,11 +139,116 @@ contract TutorSystem {
             AllStudents[i] = students[studentNames[i]];
         }
         return AllStudents;
+    }  
+
+    function deleteStudent(string memory _name) public {
+        delete students[_name];
+        for (uint i = 0; i < studentNames.length; i++) {
+            if (keccak256(abi.encodePacked(studentNames[i])) == keccak256(abi.encodePacked(_name))) {
+                studentNames[i] = studentNames[studentNames.length - 1];
+                studentNames.pop();
+                break;
+            }
+        }
     }
-    
+
+    function deleteTutor(string memory _name) public {
+        delete tutors[_name];
+        for (uint i = 0; i < tutorNames.length; i++) {
+            if (keccak256(abi.encodePacked(tutorNames[i])) == keccak256(abi.encodePacked(_name))) {
+                tutorNames[i] = tutorNames[tutorNames.length - 1];
+                tutorNames.pop();
+                break;
+            }
+        }
+
+    }
+
+    function showTutorsOnDay(uint256 _dayIndex) public view returns (Tutor[] memory) {
+        
+        uint256 tutorNum = 0;
+
+        for (uint i = 0; i < tutorNames.length; i++) {
+            bool[7] memory theDays = getTutorDaysAvailable(tutorNames[i]);
+            if (theDays[_dayIndex]) {
+                tutorNum += 1;
+            }
+        }
+
+        Tutor[] memory availableTutors = new Tutor[](tutorNum);
+        uint256 count = 0;
+
+        for (uint i = 0; i < tutorNames.length; i++) {
+            bool[7] memory theDays = getTutorDaysAvailable(tutorNames[i]);
+            if (theDays[_dayIndex]) {
+                availableTutors[count] = getTutor(tutorNames[i]); 
+                count += 1;
+            }
+        }
+
+        return availableTutors;
+    }
 
 
+    function showTutorsOnClass(string memory _class) public view returns (Tutor[] memory) {
+        
+        uint256 tutorNum = 0;
+
+         for (uint i = 0; i < tutorNames.length; i++) {
+            string[] memory classes = getTutorClassesTaught(tutorNames[i]);
+            for (uint j = 0; j < classes.length; j++) {
+                if (keccak256(abi.encodePacked(classes[j])) == keccak256(abi.encodePacked(_class))) {
+                    tutorNum += 1;
+                }
+            }   
+        }
+
+        Tutor[] memory availableTutors = new Tutor[](tutorNum);
+        uint256 count = 0;
+
+        for (uint i = 0; i < tutorNames.length; i++) {
+            string[] memory classes = getTutorClassesTaught(tutorNames[i]);
+            for (uint j = 0; j < classes.length; j++) {
+                if (keccak256(abi.encodePacked(classes[j])) == keccak256(abi.encodePacked(_class))) {
+                    availableTutors[count] = getTutor(tutorNames[i]); 
+                    count += 1;
+                }
+            }   
+        }
+
+        return availableTutors;
+    }
+
+    function matchStudentTutor(string memory _studentName, string memory _class, uint256 _dayIndex, string memory _tutorName) public returns (bool) {
+
+        string[] memory classes = getTutorClassesTaught(_tutorName);
+        bool[7] memory theDays = getTutorDaysAvailable(_tutorName);
+
+        if (theDays[_dayIndex]) {
+            for (uint i = 0; i < classes.length; i++) {
+                 if (keccak256(abi.encodePacked(classes[i])) == keccak256(abi.encodePacked(_class))) {
+                    updateMatch(_studentName, _dayIndex, _tutorName);
+                    return true;
+                 }
+            }
+        }
+
+        return false;
+    }
 
 
+    function updateMatch(string memory _studentName, uint256 _dayIndex, string memory _tutorName) public {
+        // No longer available in those days
+        students[_studentName].daysAvailable[_dayIndex] = false;
+        tutors[_tutorName].daysAvailable[_dayIndex] = false;
+        studentPayTutor(_studentName, _tutorName);
+    }
+
+
+    function studentPayTutor(string memory _studentName, string memory _tutorName) public {
+        require(tutors[_tutorName].priceForClass > students[_studentName].balance , "Insufficient balance for student");
+        students[_studentName].balance -= tutors[_tutorName].priceForClass;
+        tutors[_tutorName].balance += tutors[_tutorName].priceForClass;
+    }    
 
 }
