@@ -5,15 +5,18 @@
 def commands():
     print()
     print("Here are the possible comments:")
-    print("Add a Student:- addStudent [name, balance, [Classrequired], [daysAvailable in T/F form], wallet address]")
-    print("Add a tutor:- addTutor [name, balance, [ClassesTaught], [daysAvailable in T/F form], wallet address]")
-    print("Show all available tutors for a given day:- getTutors Day")
+    print("Add a Student:- addStudent [name, balance, [Classrequired], [daysAvailable in T/F form], [currentTutors], wallet address]")
+    print("Add a tutor:- addTutor [name, balance, [ClassesTaught], [daysAvailable in T/F form], [CurrentStudents], wallet address]")
+    print("Get a tutor's current students:- getCurrentStudents name")
+    print("Get a student's current tutors:- getCurrentTutors name")
     print("Show all the students in the system:- showStudents")
     print("Get a student:- getStudent name")
     print("Get a tutor:- getTutor name")
-    print("Get a tutor's current students:- getCurrentStudents name")
-    print("Get a student's current tutors:- getCurrentTutors name")
+
+    print("Show all available tutors for a given day:- getTutors Day")
     print("Match student with tutor:- match studentname&tutorname")
+    print("Delete Student:- deleteStudent name")
+    print("Delete Tutor:- deleteTutor name")
     print("Quit the system:- quit")
     print()
 

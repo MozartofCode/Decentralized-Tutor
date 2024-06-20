@@ -27,95 +27,111 @@ contract TutorSystem {
         address wallet;
     }
 
-  
-    mapping(address => Student) public students;
-    address[] public studentAddresses;
+    // Map name to students
+    mapping(string => Student) public students;
+    string[] public studentNames;
     
-    mapping(address => Tutor) public tutors;
-    address[] public tutorAddresses;
+    mapping(string => Tutor) public tutors;
+    string[] public tutorNames;
 
     // Constructors for Tutor and Student
     function createTutor(string memory _name, uint256 _balance, string[] memory _classesTaught, bool[7] memory _daysAvailable, string[] memory _currentStudents, address _adr) public {
-        tutors[_adr] = Tutor(_name, _balance, _classesTaught, _daysAvailable, _currentStudents, _adr);
-        tutorAddresses.push(_adr);
+        tutors[_name] = Tutor(_name, _balance, _classesTaught, _daysAvailable, _currentStudents, _adr);
+        tutorNames.push(_name);
     }
 
     function createStudent(string memory _name, uint256 _balance, string[] memory _classesTaught, bool[7] memory _daysAvailable, string[] memory _currentTutors, address _adr) public {
-        students[_adr] = Student(_name, _balance, _classesTaught, _daysAvailable, _currentTutors, _adr);
-        studentAddresses.push(_adr);
+        students[_name] = Student(_name, _balance, _classesTaught, _daysAvailable, _currentTutors, _adr);
+        studentNames.push(_name);
     }
 
 
     // Setters (The search is always going to be initiated with address)
-    function setTutorBalance(address _adr, uint256 _balance) public {
-        tutors[_adr].balance = _balance;
+    function setTutorBalance(string memory _name, uint256 _balance) public {
+        tutors[_name].balance = _balance;
     }
 
-    function setTutorClassesTaught(address _adr, string[] memory _classesTaught) public {
-        tutors[_adr].classesTaught = _classesTaught;
+    function setTutorClassesTaught(string memory _name, string[] memory _classesTaught) public {
+        tutors[_name].classesTaught = _classesTaught;
     }
 
-    function setTutorDaysAvailable(address _adr, bool[7] memory _daysAvailable) public {
-        tutors[_adr].daysAvailable = _daysAvailable;
+    function setTutorDaysAvailable(string memory _name, bool[7] memory _daysAvailable) public {
+        tutors[_name].daysAvailable = _daysAvailable;
     }
 
-    function setTutorCurrentStudents(address _adr, string[] memory _currentStudents) public {
-        tutors[_adr].currentStudents = _currentStudents;
+    function setTutorCurrentStudents(string memory _name, string[] memory _currentStudents) public {
+        tutors[_name].currentStudents = _currentStudents;
     }
 
-    function setStudentBalance(address _adr, uint256 _balance) public {
-        students[_adr].balance = _balance;
+    function setStudentBalance(string memory _name, uint256 _balance) public {
+        students[_name].balance = _balance;
     }
 
-    function setStudentClassesRequested(address _adr, string[] memory _classesRequested) public {
-        students[_adr].classesRequested = _classesRequested;
+    function setStudentClassesRequested(string memory _name, string[] memory _classesRequested) public {
+        students[_name].classesRequested = _classesRequested;
     }
 
-    function setStudentDaysAvailable(address _adr, bool[7] memory _daysAvailable) public {
-        students[_adr].daysAvailable = _daysAvailable;
+    function setStudentDaysAvailable(string memory _name, bool[7] memory _daysAvailable) public {
+        students[_name].daysAvailable = _daysAvailable;
     }
 
-    function setStudentCurrentTutors(address _adr, string[] memory _currentTutors) public {
-        students[_adr].currentTutors = _currentTutors;
+    function setStudentCurrentTutors(string memory _name, string[] memory _currentTutors) public {
+        students[_name].currentTutors = _currentTutors;
     }
 
 
     // Getters
-    function getTutorBalance(address _adr) public view returns (uint256) {
-        return tutors[_adr].balance;
+    function getTutor(string memory _name) public view returns(Tutor memory) {
+        return tutors[_name];
     }
 
-    function getTutorClassesTaught(address _adr) public view returns (string[] memory) {
-        return tutors[_adr].classesTaught;
+    function getStudent(string memory _name) public view returns(Student memory) {
+        return students[_name];
     }
 
-    function getTutorDaysAvailable(address _adr) public view returns (bool[7] memory) {
-        return tutors[_adr].daysAvailable;
+    function getTutorBalance(string memory _name) public view returns (uint256) {
+        return tutors[_name].balance;
     }
 
-    function getTutorCurrentStudents(address _adr) public view returns (string[] memory) {
-        return tutors[_adr].currentStudents;
+    function getTutorClassesTaught(string memory _name) public view returns (string[] memory) {
+        return tutors[_name].classesTaught;
     }
 
-    function getStudentBalance(address _adr) public view returns (uint256) {
-        return students[_adr].balance;
+    function getTutorDaysAvailable(string memory _name) public view returns (bool[7] memory) {
+        return tutors[_name].daysAvailable;
     }
 
-    function getStudentClassesRequested(address _adr) public view returns (string[] memory) {
-        return students[_adr].classesRequested;
+    function getTutorCurrentStudents(string memory _name) public view returns (string[] memory) {
+        return tutors[_name].currentStudents;
     }
 
-    function getStudentDaysAvailable(address _adr) public view returns (bool[7] memory) {
-        return students[_adr].daysAvailable;
+    function getStudentBalance(string memory _name) public view returns (uint256) {
+        return students[_name].balance;
     }
 
-    function getStudentCurrentTutors(address _adr) public view returns (string[] memory) {
-        return students[_adr].currentTutors;
+    function getStudentClassesRequested(string memory _name) public view returns (string[] memory) {
+        return students[_name].classesRequested;
     }
 
+    function getStudentDaysAvailable(string memory _name) public view returns (bool[7] memory) {
+        return students[_name].daysAvailable;
+    }
 
+    function getStudentCurrentTutors(string memory _name) public view returns (string[] memory) {
+        return students[_name].currentTutors;
+    }
 
-
+    // Addtional System Functions
+    
+    // Return all Student names and their addresses
+    function showAllStudents() public view returns (Student[] memory) {
+        Student[] memory AllStudents = new Student[](studentNames.length);
+        for (uint i = 0; i < studentNames.length; i++) {
+            AllStudents[i] = students[studentNames[i]];
+        }
+        return AllStudents;
+    }
+    
 
 
 
