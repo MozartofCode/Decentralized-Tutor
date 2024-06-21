@@ -2,6 +2,9 @@
 # @ Filename: CLI.py
 # This is the command line interface for a decentralized tutor-student match system
 
+import json
+from web3 import Web3
+
 def commands():
     print()
     print("Here are the possible comments:")
@@ -24,6 +27,26 @@ def main():
     print("Welcome to Tutor-Student Match Management System...")
     commands()
     
+    # Connecting to Ganache
+    ganache_url = "http://127.0.0.1:7545"
+    web3 = Web3(Web3.HTTPProvider(ganache_url))
+
+    print("Connection to Ganache successful?: " + str(web3.is_connected()))
+
+    # Replace with the address of the deployed contract
+    contract_address = '0xEe45A386016A7c0f325fccf92d8d8fA258FA006A'
+
+    # Replace with the path to your contract's JSON file
+    with open('build/contracts/TutorSystem.json') as f:
+        contract_json = json.load(f)
+        contract_abi = contract_json['abi']
+
+    contract = web3.eth.contract(address=contract_address, abi=contract_abi)
+    web3 = web3
+    contract = contract
+    web3.eth.default_account = web3.eth.accounts[0]
+
+
     while True:
         command = input("What do you want to do:- ")
 
