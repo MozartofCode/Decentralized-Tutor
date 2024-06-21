@@ -35,6 +35,9 @@ contract TutorSystem {
     mapping(string => Tutor) public tutors;
     string[] public tutorNames;
 
+    event Matched(bool matchResult);
+
+
     // Constructors for Tutor and Student
     function createTutor(string memory _name, uint256 _balance, string[] memory _classesTaught, bool[7] memory _daysAvailable, string[] memory _currentStudents, uint256 _price, address _adr) public {
         tutors[_name] = Tutor(_name, _balance, _classesTaught, _daysAvailable, _currentStudents, _price, _adr);
@@ -228,6 +231,7 @@ contract TutorSystem {
             for (uint i = 0; i < classes.length; i++) {
                  if (keccak256(abi.encodePacked(classes[i])) == keccak256(abi.encodePacked(_class))) {
                     updateMatch(_studentName, _dayIndex, _tutorName);
+                    emit Matched(true);
                     return true;
                  }
             }
@@ -246,7 +250,7 @@ contract TutorSystem {
 
 
     function studentPayTutor(string memory _studentName, string memory _tutorName) public {
-        require(tutors[_tutorName].priceForClass > students[_studentName].balance , "Insufficient balance for student");
+        require(tutors[_tutorName].priceForClass < students[_studentName].balance, "Insufficient balance for student");
         students[_studentName].balance -= tutors[_tutorName].priceForClass;
         tutors[_tutorName].balance += tutors[_tutorName].priceForClass;
     }    
