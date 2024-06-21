@@ -24,8 +24,6 @@ def commands():
     print()
 
 def main():
-    print("Welcome to Tutor-Student Match Management System...")
-    commands()
     
     # Connecting to Ganache
     ganache_url = "http://127.0.0.1:7545"
@@ -46,28 +44,36 @@ def main():
     contract = contract
     web3.eth.default_account = web3.eth.accounts[0]
 
-    print("Add a Student:- addStudent [name, balance, [Classrequired], [daysAvailable in T/F form], [currentTutors], wallet address]")
-    print("Add a tutor:- addTutor [name, balance, [ClassesTaught], [daysAvailable in T/F form], [CurrentStudents], wallet address]")
-
-
+    print("Welcome to Tutor-Student Match Management System...")
+    commands()
 
     while True:
+        print()
         command = input("What do you want to do:- ")
         command = command.split(" ")
 
-        if command == "quit":
+        if command[0] == "quit":
             print()
             print("Thank you for using Tutor-Student Match Management")
             print()
             break    
         
         elif command[0] == "addStudent":
-            name = command[1]
-            balance = int(command[2])
-            classesRequired = list(command[3])
-            currentTutors = []
-            address = ""
-            contract.functions.createStudent(name, balance, classesRequired, currentTutors, address).call()
+            name = "Alice"
+            balance = 1000
+            classesRequired = ["Math", "Physics"]
+            days = [True, False, True, False, True, False, True]
+            tutors = []
+            address = "0x1234567890123456789012345678901234567890"
+        
+        
+        #     name = command[1]
+        #     balance = int(command[2])
+        #     classesRequired = ["Math", "English"]
+        #     # list(command[3])
+        #     currentTutors = []
+        #     address = web3.eth.accounts[0]
+            contract.functions.createStudent(name, balance, classesRequired, days, tutors, address).transact()
         
         elif command[0] == "addTutor":
             name = command[1]
@@ -75,7 +81,7 @@ def main():
             classesTaught = list(command[3])
             currentStudents = []
             address = ""
-            contract.functions.createTutor(name, balance, classesTaught, currentStudents, address).call()
+            contract.functions.createTutor(name, balance, classesTaught, currentStudents, address).transact()
         
         elif command[0] == "getCurrentStudents":
             tutorName = command[1]
@@ -110,20 +116,23 @@ def main():
         elif command[0] == "showStudents":
             
             students = contract.functions.showAllStudents().call()
+
             for student in students:
-                print("Name: " + str(student.name))
-                print("Balance: " + str(student.balance))
-                print("Classes Requested: " + str(student.classesRequested))
-                print("Available Days: " + str(student.daysAvailable))
-                print("Current Tutors: " + str(student.currentTutors))
-                print("Wallet Address: " + str(student.address))            
-                print()
+                print(student)
+                # print("Name: " + str(student.name))
+                # print("Balance: " + str(student.balance))
+                # print("Classes Requested: " + str(student.classesRequested))
+                # print("Available Days: " + str(student.daysAvailable))
+                # print("Current Tutors: " + str(student.currentTutors))
+                # print("Wallet Address: " + str(student.address))            
+                # print()
 
         
         elif command[0] == "getStudent":
             studentName = command[1]
             student = contract.functions.getStudent(studentName).call()
-
+            print(student)
+            
             print("Name: " + str(student.name))
             print("Balance: " + str(student.balance))
             print("Classes Requested: " + str(student.classesRequested))
@@ -150,11 +159,11 @@ def main():
         
         elif command[0] == "deleteStudent":
             studentName = command[1]
-            contract.functions.deleteStudent(studentName).call()
+            contract.functions.deleteStudent(studentName).transact()
         
         elif command[0] == "deleteTutor":
             TutorName = command[1]
-            contract.functions.deleteTutor(tutorName).call()
+            contract.functions.deleteTutor(tutorName).transact()
         
         elif command[0] == "getDayTutors":
             day = command[1]
@@ -193,7 +202,7 @@ def main():
             _class = input("What class: ")
             dayIndex = input("What day (0-6 index): ")
 
-            if (contract.functions.matchStudentTutor(student, _class, dayIndex, tutor).call()):
+            if (contract.functions.matchStudentTutor(student, _class, dayIndex, tutor).transact()):
                 print("Match is successful...")
             else:
                 print("Match is UNSUCCESSFUL. Please try again...")
