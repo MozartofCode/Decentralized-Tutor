@@ -60,11 +60,11 @@ def main():
         
         elif command[0] == "addStudent":
             name = "Alice"
-            balance = 1000
-            classesRequired = ["Math", "Physics"]
+            balance = 100
+            classesRequired = ["Math", "Physics", "English"]
             days = [True, False, True, False, True, False, True]
-            tutors = []
-            address = "0x1234567890123456789012345678901234567890"
+            tutors = ["Michael", "Jordan"]
+            address = "0xA2fB0bCfa18b62C5A54b17d781c7D42f42e6fD8A"
         
         
         #     name = command[1]
@@ -76,40 +76,32 @@ def main():
             contract.functions.createStudent(name, balance, classesRequired, days, tutors, address).transact()
         
         elif command[0] == "addTutor":
-            name = command[1]
-            balance = int(command[2])
-            classesTaught = list(command[3])
-            currentStudents = []
-            address = ""
-            contract.functions.createTutor(name, balance, classesTaught, currentStudents, address).transact()
+            # name = command[1]
+            # balance = int(command[2])
+            # classesTaught = list(command[3])
+            # currentStudents = []
+            # address = ""
+            
+            name = "Alexis"
+            balance = 100
+            classesTaught = ["Math", "Physics", "English"]
+            days = [True, False, True, False, True, False, True]
+            currentStudents = ["Jane"]
+            address = "0xA2fB0bCfa18b62C5A54b17d781c7D42f42e6fD8A"
+            price = 10
+
+            contract.functions.createTutor(name, balance, classesTaught, currentStudents, price, address).transact()
         
         elif command[0] == "getCurrentStudents":
             tutorName = command[1]
             students = contract.functions.getTutorCurrentStudents(tutorName).call()
-
-            for student in students:
-                print("Name: " + str(student.name))
-                print("Balance: " + str(student.balance))
-                print("Classes Requested: " + str(student.classesRequested))
-                print("Available Days: " + str(student.daysAvailable))
-                print("Current Tutors: " + str(student.currentTutors))
-                print("Wallet Address: " + str(student.address))            
-                print()
+            print(str(students))
 
         
         elif command[0] == "getCurrentTutors":
             studentName = command[1]
             tutors = contract.functions.getStudentCurrentTutors(studentName).call()
-
-            for tutor in tutors:
-                print("Name: " + str(tutor.name))
-                print("Balance: " + str(tutor.balance))
-                print("Classes Taught: " + str(tutor.classesTaught))
-                print("Available Days: " + str(tutor.daysAvailable))
-                print("Current Students: " + str(tutor.currentStudents))
-                print("Price For A Class: " + str(tutor.priceForClass))
-                print("Wallet Address: " + str(tutor.address))            
-                print()
+            print(str(tutors))
 
 
         
@@ -118,27 +110,25 @@ def main():
             students = contract.functions.showAllStudents().call()
 
             for student in students:
-                print(student)
-                # print("Name: " + str(student.name))
-                # print("Balance: " + str(student.balance))
-                # print("Classes Requested: " + str(student.classesRequested))
-                # print("Available Days: " + str(student.daysAvailable))
-                # print("Current Tutors: " + str(student.currentTutors))
-                # print("Wallet Address: " + str(student.address))            
-                # print()
+                print("Name: " + str(student[0]))
+                print("Balance: " + str(student[1]))
+                print("Classes Requested: " + str(student[2]))
+                print("Available Days: " + str(student[3]))
+                print("Current Tutors: " + str(student[4]))
+                print("Wallet Address: " + str(student[5]))            
+                print()
 
         
         elif command[0] == "getStudent":
             studentName = command[1]
             student = contract.functions.getStudent(studentName).call()
-            print(student)
             
-            print("Name: " + str(student.name))
-            print("Balance: " + str(student.balance))
-            print("Classes Requested: " + str(student.classesRequested))
-            print("Available Days: " + str(student.daysAvailable))
-            print("Current Tutors: " + str(student.currentTutors))
-            print("Wallet Address: " + str(student.address))            
+            print("Name: " + str(student[0]))
+            print("Balance: " + str(student[1]))
+            print("Classes Requested: " + str(student[2]))
+            print("Available Days: " + str(student[3]))
+            print("Current Tutors: " + str(student[4]))
+            print("Wallet Address: " + str(student[5]))            
             print()
 
             
@@ -146,15 +136,14 @@ def main():
             tutorName = command[1]
             tutor = contract.functions.getTutor(tutorName).call()
             
-            print("Name: " + str(tutor.name))
-            print("Balance: " + str(tutor.balance))
-            print("Classes Taught: " + str(tutor.classesTaught))
-            print("Available Days: " + str(tutor.daysAvailable))
-            print("Current Students: " + str(tutor.currentStudents))
-            print("Price For A Class: " + str(tutor.priceForClass))
-            print("Wallet Address: " + str(tutor.address))            
+            print("Name: " + str(tutor[0]))
+            print("Balance: " + str(tutor[1]))
+            print("Classes Taught: " + str(tutor[2]))
+            print("Available Days: " + str(tutor[3]))
+            print("Current Students: " + str(tutor[4]))
+            print("Price For A Class: " + str(tutor[5]))
+            print("Wallet Address: " + str(tutor[6]))            
             print()
-
             
         
         elif command[0] == "deleteStudent":
@@ -170,15 +159,14 @@ def main():
             tutors = contract.functions.showTutorsOnDay(day).call()
     
             for tutor in tutors:
-                print("Name: " + str(tutor.name))
-                print("Balance: " + str(tutor.balance))
-                print("Classes Taught: " + str(tutor.classesTaught))
-                print("Available Days: " + str(tutor.daysAvailable))
-                print("Current Students: " + str(tutor.currentStudents))
-                print("Price For A Class: " + str(tutor.priceForClass))
-                print("Wallet Address: " + str(tutor.address))            
+                print("Name: " + str(tutor[0]))
+                print("Balance: " + str(tutor[1]))
+                print("Classes Taught: " + str(tutor[2]))
+                print("Available Days: " + str(tutor[3]))
+                print("Current Students: " + str(tutor[4]))
+                print("Price For A Class: " + str(tutor[5]))
+                print("Wallet Address: " + str(tutor[6]))            
                 print()
-
 
         
         elif command[0] == "getClassTutors":
@@ -186,13 +174,13 @@ def main():
             tutors = contract.functions.showTutorsOnDay(_class).call()
 
             for tutor in tutors:
-                print("Name: " + str(tutor.name))
-                print("Balance: " + str(tutor.balance))
-                print("Classes Taught: " + str(tutor.classesTaught))
-                print("Available Days: " + str(tutor.daysAvailable))
-                print("Current Students: " + str(tutor.currentStudents))
-                print("Price For A Class: " + str(tutor.priceForClass))
-                print("Wallet Address: " + str(tutor.address))            
+                print("Name: " + str(tutor[0]))
+                print("Balance: " + str(tutor[1]))
+                print("Classes Taught: " + str(tutor[2]))
+                print("Available Days: " + str(tutor[3]))
+                print("Current Students: " + str(tutor[4]))
+                print("Price For A Class: " + str(tutor[5]))
+                print("Wallet Address: " + str(tutor[6]))            
                 print()
 
 
