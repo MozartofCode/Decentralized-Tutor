@@ -18,7 +18,7 @@ def commands():
     print("Delete Student:- deleteStudent name")
     print("Delete Tutor:- deleteTutor name")
     print("Show all available tutors for a given day:- getDayTutors Day")
-    print("Show all availavle tutors for a given class:- getClassTutors class")
+    print("Show all available tutors for a given class:- getClassTutors class")
     print("Match student with tutor:- match studentname tutorname")
     print("Quit the system:- quit")
     print()
@@ -46,37 +46,159 @@ def main():
     contract = contract
     web3.eth.default_account = web3.eth.accounts[0]
 
+    print("Add a Student:- addStudent [name, balance, [Classrequired], [daysAvailable in T/F form], [currentTutors], wallet address]")
+    print("Add a tutor:- addTutor [name, balance, [ClassesTaught], [daysAvailable in T/F form], [CurrentStudents], wallet address]")
+
+
 
     while True:
         command = input("What do you want to do:- ")
+        command = command.split(" ")
 
         if command == "quit":
             print()
             print("Thank you for using Tutor-Student Match Management")
             print()
             break    
-
+        
         elif command[0] == "addStudent":
-            return
+            name = command[1]
+            balance = int(command[2])
+            classesRequired = list(command[3])
+            currentTutors = []
+            address = ""
+            contract.functions.createStudent(name, balance, classesRequired, currentTutors, address).call()
         
         elif command[0] == "addTutor":
-            return
+            name = command[1]
+            balance = int(command[2])
+            classesTaught = list(command[3])
+            currentStudents = []
+            address = ""
+            contract.functions.createTutor(name, balance, classesTaught, currentStudents, address).call()
+        
+        elif command[0] == "getCurrentStudents":
+            tutorName = command[1]
+            students = contract.functions.getTutorCurrentStudents(tutorName).call()
+
+            for student in students:
+                print("Name: " + str(student.name))
+                print("Balance: " + str(student.balance))
+                print("Classes Requested: " + str(student.classesRequested))
+                print("Available Days: " + str(student.daysAvailable))
+                print("Current Tutors: " + str(student.currentTutors))
+                print("Wallet Address: " + str(student.address))            
+                print()
+
+        
+        elif command[0] == "getCurrentTutors":
+            studentName = command[1]
+            tutors = contract.functions.getStudentCurrentTutors(studentName).call()
+
+            for tutor in tutors:
+                print("Name: " + str(tutor.name))
+                print("Balance: " + str(tutor.balance))
+                print("Classes Taught: " + str(tutor.classesTaught))
+                print("Available Days: " + str(tutor.daysAvailable))
+                print("Current Students: " + str(tutor.currentStudents))
+                print("Price For A Class: " + str(tutor.priceForClass))
+                print("Wallet Address: " + str(tutor.address))            
+                print()
+
+
         
         elif command[0] == "showStudents":
-            return
-        
-        elif command[0] == "getTutors":
-            return
-        
-        elif command[0] == "match":
-            return
+            
+            students = contract.functions.showAllStudents().call()
+            for student in students:
+                print("Name: " + str(student.name))
+                print("Balance: " + str(student.balance))
+                print("Classes Requested: " + str(student.classesRequested))
+                print("Available Days: " + str(student.daysAvailable))
+                print("Current Tutors: " + str(student.currentTutors))
+                print("Wallet Address: " + str(student.address))            
+                print()
+
         
         elif command[0] == "getStudent":
-            return
-        
-        elif command[0] == "getTutor":
-            return
+            studentName = command[1]
+            student = contract.functions.getStudent(studentName).call()
 
+            print("Name: " + str(student.name))
+            print("Balance: " + str(student.balance))
+            print("Classes Requested: " + str(student.classesRequested))
+            print("Available Days: " + str(student.daysAvailable))
+            print("Current Tutors: " + str(student.currentTutors))
+            print("Wallet Address: " + str(student.address))            
+            print()
+
+            
+        elif command[0] == "getTutor":
+            tutorName = command[1]
+            tutor = contract.functions.getTutor(tutorName).call()
+            
+            print("Name: " + str(tutor.name))
+            print("Balance: " + str(tutor.balance))
+            print("Classes Taught: " + str(tutor.classesTaught))
+            print("Available Days: " + str(tutor.daysAvailable))
+            print("Current Students: " + str(tutor.currentStudents))
+            print("Price For A Class: " + str(tutor.priceForClass))
+            print("Wallet Address: " + str(tutor.address))            
+            print()
+
+            
+        
+        elif command[0] == "deleteStudent":
+            studentName = command[1]
+            contract.functions.deleteStudent(studentName).call()
+        
+        elif command[0] == "deleteTutor":
+            TutorName = command[1]
+            contract.functions.deleteTutor(tutorName).call()
+        
+        elif command[0] == "getDayTutors":
+            day = command[1]
+            tutors = contract.functions.showTutorsOnDay(day).call()
+    
+            for tutor in tutors:
+                print("Name: " + str(tutor.name))
+                print("Balance: " + str(tutor.balance))
+                print("Classes Taught: " + str(tutor.classesTaught))
+                print("Available Days: " + str(tutor.daysAvailable))
+                print("Current Students: " + str(tutor.currentStudents))
+                print("Price For A Class: " + str(tutor.priceForClass))
+                print("Wallet Address: " + str(tutor.address))            
+                print()
+
+
+        
+        elif command[0] == "getClassTutors":
+            _class = command[1]
+            tutors = contract.functions.showTutorsOnDay(_class).call()
+
+            for tutor in tutors:
+                print("Name: " + str(tutor.name))
+                print("Balance: " + str(tutor.balance))
+                print("Classes Taught: " + str(tutor.classesTaught))
+                print("Available Days: " + str(tutor.daysAvailable))
+                print("Current Students: " + str(tutor.currentStudents))
+                print("Price For A Class: " + str(tutor.priceForClass))
+                print("Wallet Address: " + str(tutor.address))            
+                print()
+
+
+        elif command[0] == "match": 
+            student = input("Student Name: ")
+            tutor = input("Tutor Name: ")
+            _class = input("What class: ")
+            dayIndex = input("What day (0-6 index): ")
+
+            if (contract.functions.matchStudentTutor(student, _class, dayIndex, tutor).call()):
+                print("Match is successful...")
+            else:
+                print("Match is UNSUCCESSFUL. Please try again...")
+        
+    
 
 
 
