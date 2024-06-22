@@ -4,6 +4,8 @@
 
 import json
 from web3 import Web3
+import ast
+
 
 def commands():
     print()
@@ -59,36 +61,25 @@ def main():
             break    
         
         elif command[0] == "addStudent":
-            name = "Alice"
-            balance = 100
-            classesRequired = ["Math", "Physics", "English"]
-            days = [True, False, True, False, True, False, True]
-            tutors = ["Michael", "Jordan"]
-            address = "0xA2fB0bCfa18b62C5A54b17d781c7D42f42e6fD8A"
+
+            name = command[1]
+            balance = int(command[2])
+            classesRequired = ast.literal_eval(command[3]) 
+            days = ast.literal_eval(command[4])
+            tutors = ast.literal_eval(command[5])
+            address = command[6]
         
-        
-        #     name = command[1]
-        #     balance = int(command[2])
-        #     classesRequired = ["Math", "English"]
-        #     # list(command[3])
-        #     currentTutors = []
-        #     address = web3.eth.accounts[0]
             contract.functions.createStudent(name, balance, classesRequired, days, tutors, address).transact()
         
         elif command[0] == "addTutor":
-            # name = command[1]
-            # balance = int(command[2])
-            # classesTaught = list(command[3])
-            # currentStudents = []
-            # address = ""
             
-            name = "Alexis"
-            balance = 100
-            classesTaught = ["Math", "Physics", "English"]
-            days = [True, False, True, False, True, False, True]
-            currentStudents = ["Jane", "Jennifer"]
-            address = "0xA2fB0bCfa18b62C5A54b17d781c7D42f42e6fD8A"
-            price = 10
+            name = command[1]
+            balance = int(command[2])
+            classesTaught = ast.literal_eval(command[3]) 
+            days = ast.literal_eval(command[4]) 
+            currentStudents = ast.literal_eval(command[5])
+            price = int(command[6])  
+            address = command[7]
 
             contract.functions.createTutor(name, balance, classesTaught, days, currentStudents, price, address).transact()
         
@@ -102,8 +93,6 @@ def main():
             studentName = command[1]
             tutors = contract.functions.getStudentCurrentTutors(studentName).call()
             print(str(tutors))
-
-
         
         elif command[0] == "showStudents":
             
@@ -195,8 +184,6 @@ def main():
             else:
                 print("Match is UNSUCCESSFUL. Please try again...")
         
-    
-
 
 if __name__ == "__main__":
     main()
