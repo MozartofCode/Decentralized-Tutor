@@ -86,11 +86,11 @@ def main():
             balance = 100
             classesTaught = ["Math", "Physics", "English"]
             days = [True, False, True, False, True, False, True]
-            currentStudents = ["Jane"]
+            currentStudents = ["Jane", "Jennifer"]
             address = "0xA2fB0bCfa18b62C5A54b17d781c7D42f42e6fD8A"
             price = 10
 
-            contract.functions.createTutor(name, balance, classesTaught, currentStudents, price, address).transact()
+            contract.functions.createTutor(name, balance, classesTaught, days, currentStudents, price, address).transact()
         
         elif command[0] == "getCurrentStudents":
             tutorName = command[1]
@@ -155,7 +155,7 @@ def main():
             contract.functions.deleteTutor(tutorName).transact()
         
         elif command[0] == "getDayTutors":
-            day = command[1]
+            day = int(command[1])
             tutors = contract.functions.showTutorsOnDay(day).call()
     
             for tutor in tutors:
@@ -171,7 +171,7 @@ def main():
         
         elif command[0] == "getClassTutors":
             _class = command[1]
-            tutors = contract.functions.showTutorsOnDay(_class).call()
+            tutors = contract.functions.showTutorsOnClass(_class).call()
 
             for tutor in tutors:
                 print("Name: " + str(tutor[0]))
@@ -196,8 +196,6 @@ def main():
                 print("Match is UNSUCCESSFUL. Please try again...")
         
     
-
-
 
 
 if __name__ == "__main__":
