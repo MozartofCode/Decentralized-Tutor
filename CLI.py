@@ -6,7 +6,7 @@ import json
 from web3 import Web3
 import ast
 
-
+# This functions prints the possible commands for the CLI
 def commands():
     print()
     print("Here are the possible comments:")
@@ -25,6 +25,9 @@ def commands():
     print("Quit the system:- quit")
     print()
 
+
+# This is the main function that asks for user input and interacts with the smart contract using 
+# the web3 library in python for getting information about tutors and students and match them
 def main():
     
     # Connecting to Ganache
