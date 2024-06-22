@@ -188,7 +188,7 @@ def main():
             student = input("Student Name: ")
             tutor = input("Tutor Name: ")
             _class = input("What class: ")
-            dayIndex = input("What day (0-6 index): ")
+            dayIndex = int(input("What day (0-6 index): "))
 
             if (contract.functions.matchStudentTutor(student, _class, dayIndex, tutor).transact()):
                 print("Match is successful...")
